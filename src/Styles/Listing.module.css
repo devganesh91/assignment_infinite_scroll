@@ -1,0 +1,21 @@
+.companyCardCont {
+  align-items: center;
+  justify-content: center;
+  display: grid;
+  grid-template-columns: auto auto;
+  row-gap: 20px;
+  column-gap: 15px;
+}
+
+.loadingCards {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+@media screen and (max-width: 800px) {
+  .companyCardCont {
+    grid-template-columns: auto;
+  }
+}
