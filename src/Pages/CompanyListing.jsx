@@ -1,19 +1,24 @@
-import React, { Component } from "react";
+import React from "react";
+import Reflux from "reflux";
+
 import CompanyCard from "../ReuseableComponents/CompanyCard";
-import { connect } from "react-redux";
-import { fetchCompanies } from "../Redux/CompanyReducer/action";
 import { Card } from "antd";
 import styles from "../Styles/Listing.module.css";
 
+// Reflux components
+import CompanyStore from "../Reflux/Stores/CompanyStore";
+import CompanyActions from "../Reflux/Actions/CompanyAction";
+
 const { Meta } = Card;
 
-class CompanyListing extends Component {
+class CompanyListing extends Reflux.Component {
   constructor(props) {
     super(props);
     this.state = {
       from: 0,
       size: 20,
     };
+    this.store = CompanyStore;
   }
 
   componentDidMount() {
@@ -31,7 +36,7 @@ class CompanyListing extends Component {
     console.log(entities, entities[0].isIntersecting);
     if (entities[0].isIntersecting) {
       const { from, size } = this.state;
-      this.props.fetchCompanies({
+      CompanyActions.getcompanies({
         size: size,
         from: from,
       });
@@ -40,11 +45,7 @@ class CompanyListing extends Component {
   }
 
   render() {
-    const {
-      companies,
-      isGetCompaniesError,
-      getCompaniesErrorMessage,
-    } = this.props;
+    const { companies, isError, errormsg } = this.state;
     return (
       <div>
         <h3>Listing Page</h3>
@@ -65,21 +66,10 @@ class CompanyListing extends Component {
             <Meta title="Card title" description="This is the description" />
           </Card>
         </div>
-        {isGetCompaniesError ? <p>{getCompaniesErrorMessage}</p> : <p></p>}
+        {isError ? <p>{errormsg}</p> : <p></p>}
       </div>
     );
   }
 }
 
-const mapStateToProps = (state) => ({
-  companies: state.companies,
-  isGetCompaniesSending: state.isGetCompaniesSending,
-  isGetCompaniesError: state.isGetCompaniesError,
-  getCompaniesErrorMessage: state.getCompaniesErrorMessage,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  fetchCompanies: (payload) => dispatch(fetchCompanies(payload)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(CompanyListing);
+export default CompanyListing;
